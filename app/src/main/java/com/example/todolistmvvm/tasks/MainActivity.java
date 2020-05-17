@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
 
+    AppDatabase database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +65,17 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
             // Called when a user swipes left or right on a ViewHolder
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Here is where you'll implement swipe to delete
+                AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        int position = viewHolder.getAdapterPosition();
+                        TaskEntry task = mAdapter.getTasks().get(position);
+                        database.taskDao().deleteTask(task);
+                        retrieveTasks();
+                    }
+                });
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -83,12 +94,36 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
                 startActivity(addTaskIntent);
             }
         });
-
+        database = AppDatabase.getInstance(getApplicationContext());
 
     }
 
     @Override
     public void onItemClickListener(int itemId){
         // Launch AddTaskActivity adding the itemId as an extra in the intent
+        Intent intent = new Intent(this, AddEditTaskActivity.class);
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, itemId);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrieveTasks();
+    }
+
+    private void retrieveTasks() {
+        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<TaskEntry> tasks = database.taskDao().loadAllTasks();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setTasks(tasks);
+                    }
+                });
+            }
+        });
     }
 }

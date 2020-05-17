@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface TaskDao {
     @Query("select * from task order by priority")
-    LiveData<List<TaskEntry>> loadAllTasks();
+    List<TaskEntry> loadAllTasks();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertTask(TaskEntry task);
@@ -28,5 +28,5 @@ public interface TaskDao {
     void deleteAllTasks();
 
     @Query("Select * from task where id =:taskId")
-    LiveData<TaskEntry> loadTAskById(int taskId);
+    TaskEntry loadTAskById(int taskId);
 }
