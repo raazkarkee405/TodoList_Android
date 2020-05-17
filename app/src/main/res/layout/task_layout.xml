@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <!--A priority circle that is colored in programmatically in the adapter code -->
+        <TextView
+            android:id = "@+id/priorityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/priority_number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/priority_circle"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/primary_text_light"/>
+
+        <!-- TextView that displays the update date -->
+        <TextView
+            android:id="@+id/taskUpdatedAt"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/primary_text_light"
+            android:layout_toStartOf="@id/priorityTextView"
+            android:layout_marginEnd="90dp"
+            android:text="@string/update_date" />
+
+        <!--TextView that displays the title -->
+        <TextView
+            android:id="@+id/taskTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:maxLines="1"
+            android:layout_toStartOf="@id/priorityTextView"
+            android:layout_alignParentStart="true"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/taskDescription"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/taskTitle"
+            android:textColor="@android:color/primary_text_light"
+            android:text="@string/task_description"/>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
