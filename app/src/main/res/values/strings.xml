@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">TodoListMVVM</string>
+    <string name="app_name">Todo List</string>
+    <string name="edit_title">Title</string>
+    <string name="edit_description">Description</string>
+    <string name="priority_string">Priority</string>
+
+    <string name="high_priority">High</string>
+    <string name="med_priority">Medium</string>
+    <string name="low_priority">Low</string>
+    <string name="add_button">Add</string>
+    <string name="update_button">Update</string>
+
+    <string name="priority_number">1</string>
+    <string name="update_date">11/11/1111</string>
+    <string name="priority_1">1</string>
+    <string name="priority_2">2</string>
+    <string name="priority_3">3</string>
+
+    <string name="task_title">Title</string>
+    <string name="task_description">Description</string>
 </resources>
