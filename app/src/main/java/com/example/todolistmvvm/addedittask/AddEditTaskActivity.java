@@ -53,6 +53,19 @@ public class AddEditTaskActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
             mButton.setText(R.string.update_button);
             if (mTaskId == DEFAULT_TASK_ID) {
+                mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
+                AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final TaskEntry task = AppDatabase.getInstance(getApplicationContext()).taskDao().loadTAskById(mTaskId);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                populatedUI(task);
+                            }
+                        });
+                    }
+                });
                 // populate the UI
             }
         }
@@ -87,7 +100,13 @@ public class AddEditTaskActivity extends AppCompatActivity {
      */
 
     private void populatedUI(TaskEntry task) {
-
+        if (task == null){
+            return;
+        }else{
+            editTextTitle.setText(task.getTitle());
+            editTextDescription.setText(task.getDescription());
+            setPriorityInViews(task.getPriority());
+        }
     }
 
     public void onSaveButtonClicked() {
@@ -99,10 +118,14 @@ public class AddEditTaskActivity extends AppCompatActivity {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                if(mTaskId == DEFAULT_TASK_ID){
                 AppDatabase.getInstance(getApplicationContext()).taskDao().insertTask(task);
+            }else{
+                task.setId(mTaskId);
+                AppDatabase.getInstance(getApplicationContext()).taskDao().update(task);
+                }
             }
         });
-
         finish();
     }
 
