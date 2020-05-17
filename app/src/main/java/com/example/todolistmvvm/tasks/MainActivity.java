@@ -3,6 +3,7 @@ package com.example.todolistmvvm.tasks;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
 
-    AppDatabase database;
+    MainViewModel viewModel;
 
 
     @Override
@@ -70,15 +71,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Here is where you'll implement swipe to delete
-                AppDatabase.databaseWriteExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        int position = viewHolder.getAdapterPosition();
-                        TaskEntry task = mAdapter.getTasks().get(position);
-                        database.taskDao().deleteTask(task);
-
-                    }
-                });
+                int position = viewHolder.getAdapterPosition();
+                TaskEntry task = mAdapter.getTasks().get(position);
+                viewModel.deleteTask(task);
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -97,9 +92,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
                 startActivity(addTaskIntent);
             }
         });
-        database = AppDatabase.getInstance(getApplicationContext());
 
-        retrieveTasks();
+        setUpViewModel();
 
     }
 
@@ -117,13 +111,12 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
     }
 
-    private void retrieveTasks() {
-        Log.d(TAG, "Actively retrieving the tasks from the database");
-        final LiveData<List<TaskEntry>> tasks = database.taskDao().loadAllTasks();
-        tasks.observe(this, new Observer<List<TaskEntry>>() {
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(List<TaskEntry> taskEntries) {
-                Log.d(TAG, "Receiving database update from LiveData");
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 mAdapter.setTasks(taskEntries);
             }
         });
