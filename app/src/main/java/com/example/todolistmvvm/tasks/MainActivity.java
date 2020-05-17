@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         // Set the RecyclerView to its corresponding view
         mRecyclerView = findViewById(R.id.recyclerViewTasks);
 
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         // Initialize the adapter and attach it to the RecyclerView
         mAdapter = new TaskAdapter(this, this);
         mRecyclerView.setAdapter(mAdapter);
-
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(decoration);
 
@@ -69,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
             // Called when a user swipes left or right on a ViewHolder
             @Override
-            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Here is where you'll implement swipe to delete
                 int position = viewHolder.getAdapterPosition();
-                TaskEntry task = mAdapter.getTasks().get(position);
-                viewModel.deleteTask(task);
+                List<TaskEntry> todoList = mAdapter.getTasks();
+                viewModel.deleteTask(todoList.get(position));
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -93,7 +94,12 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             }
         });
 
-        setUpViewModel();
+        viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
+            @Override
+            public void onChanged(List<TaskEntry> taskEntries) {
+                mAdapter.setTasks(taskEntries);
+            }
+        });
 
     }
 
@@ -103,22 +109,5 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         Intent intent = new Intent(this, AddEditTaskActivity.class);
         intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, itemId);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    private void setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
-            @Override
-            public void onChanged(List<TaskEntry> taskEntries) {
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                mAdapter.setTasks(taskEntries);
-            }
-        });
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.todolistmvvm.database.AppDatabase;
+import com.example.todolistmvvm.database.Repository;
 import com.example.todolistmvvm.database.TaskEntry;
 
 import java.util.List;
@@ -16,12 +17,13 @@ public class MainViewModel extends AndroidViewModel {
 
     private final static String TAG = MainViewModel.class.getSimpleName();
     private LiveData<List<TaskEntry>> tasks;
-    AppDatabase database;
+
+    Repository repository;
     public MainViewModel(@NonNull Application application) {
         super(application);
-        Log.d(TAG, "Actively retrieving the tasks from the database");
-        database = AppDatabase.getInstance(application);
-        tasks = database.taskDao().loadAllTasks();
+        AppDatabase database = AppDatabase.getInstance(application);
+        repository = new Repository(database);
+        tasks = repository.getTasks();
     }
 
     public LiveData<List<TaskEntry>> getTasks(){
@@ -29,13 +31,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void deleteTask(final TaskEntry task) {
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-
-                database.taskDao().deleteTask(task);
-
-            }
-        });
+        repository.deleteTask(task);
     }
 }

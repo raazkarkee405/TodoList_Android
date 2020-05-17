@@ -6,27 +6,32 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.todolistmvvm.database.AppDatabase;
+import com.example.todolistmvvm.database.Repository;
 import com.example.todolistmvvm.database.TaskEntry;
 
 public class AddEditTaskViewModel extends AndroidViewModel {
 
-    public LiveData<TaskEntry> getTask() {
+    Repository repository;
+    LiveData<TaskEntry> task;
+
+    AddEditTaskViewModel(Application application, int taskId){
+        super(application);
+        repository = new Repository(AppDatabase.getInstance(application));
+        if(taskId != -1)
+            task = repository.getTaskById(taskId);
+    }
+
+
+    public LiveData<TaskEntry> getTask(){
         return task;
     }
 
-    private LiveData<TaskEntry> task;
-
-    public AddEditTaskViewModel(Application application, int taskId) {
-        super(application);
-        AppDatabase database = AppDatabase.getInstance(application);
-        task = database.taskDao().loadTAskById(taskId);
-    }
-
     public void insertTask(TaskEntry task){
-
+        repository.insertTask(task);
     }
-    public void updateTask(TaskEntry task){
 
+    public void updateTask(TaskEntry task){
+        repository.insertTask(task);
     }
 
 }
