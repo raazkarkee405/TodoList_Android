@@ -1,8 +1,10 @@
-package com.example.todolistmvvm;
+package com.example.todolistmvvm.tasks;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.todolistmvvm.R;
 
 public class MainActivity extends AppCompatActivity {
 
