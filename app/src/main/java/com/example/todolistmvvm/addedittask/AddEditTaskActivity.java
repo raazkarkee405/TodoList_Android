@@ -2,9 +2,12 @@ package com.example.todolistmvvm.addedittask;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,18 +57,16 @@ public class AddEditTaskActivity extends AppCompatActivity {
             mButton.setText(R.string.update_button);
             if (mTaskId == DEFAULT_TASK_ID) {
                 mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
-                AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+                final LiveData<TaskEntry> task = AppDatabase.getInstance(getApplicationContext()).taskDao().loadTAskById(mTaskId);
+                task.observe(this, new Observer<TaskEntry>() {
                     @Override
-                    public void run() {
-                        final TaskEntry task = AppDatabase.getInstance(getApplicationContext()).taskDao().loadTAskById(mTaskId);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                populatedUI(task);
-                            }
-                        });
+                    public void onChanged(TaskEntry taskEntry) {
+                        Log.d(TAG, "Receiving database update from LiveData");
+                        task.removeObserver(this);
+                        populatedUI(taskEntry);
                     }
                 });
+
                 // populate the UI
             }
         }
