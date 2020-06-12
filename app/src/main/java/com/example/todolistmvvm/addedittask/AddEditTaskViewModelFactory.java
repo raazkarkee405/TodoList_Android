@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class AddEditTaskViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+    public class AddEditTaskViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     public AddEditTaskViewModelFactory(Application application, int taskId) {
         this.application = application;
