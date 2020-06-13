@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".tasks.EditTask"
+    android:background="@drawable/list_item_shape">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorToolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <EditText
+            android:id="@+id/editTextTaskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task title"
+            android:inputType="text"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColorLink="@color/colorAccent"
+            android:textSize="20sp"
+            app:backgroundTint="#00000000"
+            android:textStyle="bold"
+            />
+
+        <EditText
+            android:id="@+id/editTextTaskDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task Description"
+            android:inputType="textMultiLine"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColorLink="@color/colorAccent"
+            android:textSize="20sp"
+            app:backgroundTint="#00000000" />
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Priority"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="20sp"
+            app:backgroundTint="#00000000"
+            android:textStyle="bold"/>
+
+        <!-- RadioGroup for visible selection of a priority -->
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="200dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <RadioButton
+                android:id="@+id/radButton1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/materialRed"
+                android:checked="true"
+                android:text="@string/high_priority"
+                android:theme="@style/WhiteRadioButton" />
+
+            <RadioButton
+                android:id="@+id/radButton2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/materialOrange"
+                android:text="@string/med_priority"
+                android:theme="@style/WhiteRadioButton" />
+
+            <RadioButton
+                android:id="@+id/radButton3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/materialYellow"
+                android:text="@string/low_priority"
+                android:theme="@style/WhiteRadioButton" />
+
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>
