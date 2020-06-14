@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ShareCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -21,7 +22,7 @@ import androidx.room.Room;
 import com.example.todolistmvvm.MainActivity;
 import com.example.todolistmvvm.R;
 import com.example.todolistmvvm.database.AppDatabase;
-import com.example.todolistmvvm.database.Task;
+
 import com.example.todolistmvvm.database.TaskEntity;
 
 import java.util.Date;
@@ -99,6 +100,17 @@ public class EditTask extends AppCompatActivity {
                 finish();
                 return true;
 
+            case R.id.share:
+                String Description = editTextDescription.getText().toString();
+                String mimeType = "text/plain";
+                ShareCompat.IntentBuilder
+                        .from(this)
+                        .setType(mimeType)
+                        .setChooserTitle("Share this task with:")
+                        .setText(Description)
+                        .startChooser();
+                return true;
+
             case R.id.delete:
 
                 // Delete task from database
@@ -150,6 +162,7 @@ public class EditTask extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.share_item_toolbar_view, menu);
         getMenuInflater().inflate(R.menu.edit_item_toolbar_view, menu);
         return true;
     }
